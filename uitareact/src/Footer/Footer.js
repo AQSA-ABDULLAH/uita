@@ -37,10 +37,10 @@ export class Footer extends Component {
                   <a href="/licence-aggrement">License aggrement</a>
                 </li>
                 <li>
-                  <a href="">FAQ</a>
+                  <a href="/faq">FAQ</a>
                 </li>
                 <li>
-                  <a href="">Contact Us</a>
+                  <a href="/contactus">Contact Us</a>
                 </li>
               </ul>
             </Col>

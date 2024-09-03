@@ -35,7 +35,7 @@ function Header() {
                                 <Nav.Link href="/" className='active'>Home</Nav.Link>
                                 <Nav.Link href="/courses">Courses</Nav.Link>
                                 <Nav.Link href="/quizes">Quiz</Nav.Link>
-                                <Nav.Link href="/contactus">About</Nav.Link>
+                                <Nav.Link href="/aboutus">About</Nav.Link>
                                 <Nav.Link href="/help">Help</Nav.Link>
                                 <Nav.Link href="/blogs">Blog</Nav.Link>
                             </Nav>
