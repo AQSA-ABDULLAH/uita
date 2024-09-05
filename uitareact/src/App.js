@@ -30,6 +30,7 @@ import BlogDetail from './Blogs/BlogDetail/BlogDetail';
 import { BlogsPage } from './BlogsPage/BlogsPage';
 import HelpPage from './HelpPage/HelpPage';
 import FAQ from './FAQ/FAQ';
+import ExamAvailability from './ExamAvailability/ExamAvailability'; // Import the new component
 
 
 function App() {
@@ -67,7 +68,7 @@ function App() {
                             <Route exact path='/blogpost/:blogpostId' element={<BlogDetail />} />
                             <Route exact path='/course/:courseId' element={<CourseDetail />} />
                             <Route exact path='/course/:courseId/certificate/:certificateId' element={<CertificateDetail />} />
-                            {/* <Route exact path='/certificate/:certificateId' element={<CertificateDetail />} /> */}
+                            <Route path="/exam-availability/:certificationId" element={<ExamAvailability />} />
                             <Route exact path='/lecture/:lectureId' element={<LectureDetail />} />
                             <Route exact path="/aboutus" element={<AboutUs />} />
                             <Route exact path="/contactus" element={<ContactUs />} />
