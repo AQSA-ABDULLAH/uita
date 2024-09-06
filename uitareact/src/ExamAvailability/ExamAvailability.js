@@ -8,10 +8,19 @@ const ExamAvailability = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const vendorId = queryParams.get("vendorId");
-  console.log("Vendor ID:", vendorId);
+  const certificationName = queryParams.get("certificationName");
+  const certificateDetail = queryParams.get("certificateDetail");
+  const status = queryParams.get("status");
+
+  useEffect(() => {
+    console.log("Certification ID:", certificationId);
+    console.log("Vendor ID:", vendorId);
+    console.log("Certification Name:", certificationName);
+    console.log("Certificate Detail:", certificateDetail);
+    console.log("Status:", status);
+  }, [certificationId, vendorId, certificationName, certificateDetail, status]);
 
   const [exams, setExams] = useState([]);
-  const [certificateDetail, setCertificateDetail] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -21,37 +30,29 @@ const ExamAvailability = () => {
       const requestOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ certificationId, vendorId }), // Include both ids
+        body: JSON.stringify({ certificationId }), // Pass certificationId in the request body
       };
 
       try {
-        // Fetch certificate details
-        const certificateResponse = await fetch(
-          globalVar.url + "certificates",
-          requestOptions
-        );
-        if (!certificateResponse.ok)
-          throw new Error("Certificate details fetch failed");
-        const certificateData = await certificateResponse.json();
-        setCertificateDetail(certificateData.data); // Adjust this path if necessary
-
-        // Fetch exams
         const examsResponse = await fetch(
           globalVar.url + "available_exam",
-          requestOptions
+          {
+            ...requestOptions,
+            body: JSON.stringify({ certificationId, vendorId }), // Include vendorId in the request body
+          }
         );
         if (!examsResponse.ok) throw new Error("Exams fetch failed");
         const examsData = await examsResponse.json();
-        setExams(examsData.data); // Adjust this path if necessary
+        setExams(examsData.data); // Update exams state
       } catch (error) {
-        setError(error);
+        setError(error); // Handle fetch errors
       } finally {
         setLoading(false);
       }
     };
 
     if (certificationId && vendorId) {
-      fetchData();
+      fetchData(); // Trigger data fetch only if certificationId and vendorId are available
     } else {
       setError(new Error("Missing certificationId or vendorId"));
       setLoading(false);
@@ -85,25 +86,15 @@ const ExamAvailability = () => {
             </Breadcrumb>
 
             <div className="mb-4">
-              {certificateDetail ? (
-                <>
-                  <h2 className="title page-title d-flex align-items-center">
-                    <span>{certificateDetail.certification_Name}</span>
-                    <span className="d-inline-flex ms-3">
-                      {/* Display the certificate status if applicable */}
-                      <span className="certificateStatus-tag">
-                        {/* Replace with actual status if available */}
-                        {certificateDetail.status || "Completed"}
-                      </span>
-                    </span>
-                  </h2>
-                  <p>{certificateDetail.detail}</p>
-                </>
-              ) : (
-                <div className="alert alert-info">
-                  No certificate details available.
-                </div>
-              )}
+              <h2 className="title page-title d-flex align-items-center">
+                <span>{certificationName}</span>
+                <span className="d-inline-flex ms-3">
+                  <span className="certificateStatus-tag">
+                    {status || "Completed"} {/* Default status */}
+                  </span>
+                </span>
+              </h2>
+              <p>{certificateDetail}</p> {/* Certificate details */}
             </div>
 
             <Row>
@@ -124,7 +115,9 @@ const ExamAvailability = () => {
                         />
                       </div>
                     </Card>
-                    <h5 className="card-title course-title mb-3 mt-1 fw-bold">{exam.exam_Name}</h5>
+                    <h5 className="card-title course-title mb-3 mt-1 fw-bold">
+                      {exam.exam_Name}
+                    </h5>
                   </Col>
                 ))
               ) : (
