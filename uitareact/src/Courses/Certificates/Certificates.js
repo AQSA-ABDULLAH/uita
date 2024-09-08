@@ -54,6 +54,8 @@ export class Certificates extends Component {
                                         certificationId={e.certificationId}
                                         certification_Name={e.certification_Name}
                                         vendorId={vendorId} // Pass vendorId here
+                                        certificateDetail={e.detail} // Pass certificateDetail
+                                        status={e.status} // Pass status
                                     />
                                 </Col>
                             ))}
