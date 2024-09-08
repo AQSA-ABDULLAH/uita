@@ -57,9 +57,11 @@ export class Footer extends Component {
             </Col>
             <Col md={4} sm={12}>
               <h4>Follow Us</h4>
-              {/* <ul>
-                <a href="" ></a>
-              </ul> */}
+              <div className="social-share mt-3">
+                <span><i className="fab fa-facebook me-2 fs-2 text-primary"></i></span>
+                <span><i className="fab fa-twitter me-2 fs-2 text-primary"></i></span>
+                <span><i className="fab fa-linkedin me-2 fs-2 text-primary"></i></span>
+              </div>
             </Col>
           </Row>
           <Row>

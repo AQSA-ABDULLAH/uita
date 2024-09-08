@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Spinner, Breadcrumb, Row, Col, Card } from "react-bootstrap";
 import { useParams, useLocation, Link } from "react-router-dom";
 import globalVar from "../../globalVar";
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faFacebook, faTwitter, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 
 const LectureDetail = () => {
     const { lectureId } = useParams();
@@ -12,20 +14,19 @@ const LectureDetail = () => {
     const certificateDetail = queryParams.get("certificateDetail");
     const status = queryParams.get("status");
 
-    const [lectureDetails, setLectureDetails] = React.useState([]);
-    const [exams, setExams] = React.useState([]);
-    const [showLoader, setShowLoader] = React.useState(true);
-    const [loadingExams, setLoadingExams] = React.useState(true);
-    const [error, setError] = React.useState(null);
+    const [lectureDetails, setLectureDetails] = useState([]);
+    const [activeLecture, setActiveLecture] = useState(null);
+    const [exams, setExams] = useState([]);
+    const [showLoader, setShowLoader] = useState(true);
+    const [loadingExams, setLoadingExams] = useState(true);
+    const [error, setError] = useState(null);
 
-    React.useEffect(() => {
+    useEffect(() => {
         const fetchLectureDetails = async () => {
-            const formData = new FormData();
-            formData.append("examId", lectureId);
-
             const requestOptions = {
                 method: "POST",
-                body: formData,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ examId: lectureId }),
             };
 
             try {
@@ -34,7 +35,8 @@ const LectureDetail = () => {
                     throw new Error("Failed to fetch lecture details");
                 }
                 const data = await response.json();
-                setLectureDetails(data);
+                setLectureDetails(data.data);
+                setActiveLecture(data.data[0]); // Set the first lecture as the default active one
                 setShowLoader(false);
             } catch (error) {
                 console.error("Error fetching lecture details:", error);
@@ -46,7 +48,7 @@ const LectureDetail = () => {
             const requestOptions = {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ certificationId: lectureId }), // Adjust this if needed
+                body: JSON.stringify({ certificationId: lectureId }),
             };
 
             try {
@@ -67,6 +69,10 @@ const LectureDetail = () => {
         fetchLectureDetails();
         fetchExamAvailability();
     }, [lectureId]);
+
+    const handleLectureClick = (lecture) => {
+        setActiveLecture(lecture);  // Switch the video on click
+    };
 
     return (
         <section className="section section-lecture-detail inner-page">
@@ -96,16 +102,50 @@ const LectureDetail = () => {
                             </h2>
                             <p>Certificate Details: {certificateDetail}</p>
 
-                            {lectureDetails && lectureDetails.length > 0 ? (
-                                lectureDetails.map((lecture, index) => (
-                                    <div key={index} className="lecture-detail-item">
-                                        <h4>{lecture.lecture_title}</h4>
-                                        <p>{lecture.lecture_description}</p>
+                            {activeLecture && (
+                                <div className="active-lecture">
+                                    <h4>{activeLecture.video_Name}</h4>
+                                    <p>{activeLecture.video_Description}</p>
+                                    <div className="video-container" dangerouslySetInnerHTML={{ __html: activeLecture.dailymotion_url }} />
+
+                                    <div className="d-flex justify-content-between">
+                                        <div className="social-share mt-3">
+                                            <h5>Share:</h5>
+                                            <span><i className="fab fa-facebook me-2 fs-2 text-primary"></i></span>
+                                            <span><i className="fab fa-twitter me-2 fs-2 text-primary"></i></span>
+                                            <span><i className="fab fa-linkedin me-2 fs-2 text-primary"></i></span>
+                                        </div>
+
+                                        <div className="useful-links mt-3">
+                                            <h5>Useful Links:</h5>
+                                        </div>
                                     </div>
-                                ))
-                            ) : (
-                                <p>No lectures found for this exam.</p>
+                                </div>
                             )}
+                            <div className="related-lectures mt-5">
+                                <h5 className="fs-4 fw-bold mb-5">More Lectures in this Series</h5>
+                                {lectureDetails && lectureDetails.length > 1 ? (
+                                    <table className="table" style={{ borderCollapse: "separate", borderSpacing: "0 10px" }}>
+                                        <tbody>
+                                            {lectureDetails.slice(1).map((lecture, index) => (
+                                                <tr
+                                                    key={index}
+                                                    onClick={() => handleLectureClick(lecture)}
+                                                    style={{ cursor: "pointer", borderTop: "1px solid #ddd", borderBottom: "1px solid #ddd" }}
+                                                >
+                                                    <td style={{ padding: " 0" }}>
+                                                        <h6 className="text-dark">{lecture.video_Name}</h6>
+                                                        <p>{lecture.video_Description}</p>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                ) : (
+                                    <p>No more lectures available.</p>
+                                )}
+                            </div>
+
 
                             <div className="related-lectures mt-5">
                                 <h5 className="fs-4 fw-bold">Related Lecture Series</h5>
