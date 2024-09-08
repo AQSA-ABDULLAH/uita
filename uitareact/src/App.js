@@ -26,44 +26,23 @@ function App() {
       <HelmetProvider>
         <Header />
         <Router>
-          {/* <Layout> */}
           <Routes>
             <Route exact path="/" element={<Home />} />
             <Route exact path="/courses" element={<CoursesPage />} />
             <Route exact path="/blogs" element={<BlogsPage />} />
-            <Route
-              exact
-              path="/blogpost/:blogpostId"
-              element={<BlogDetail />}
-            />
+            <Route exact path="/blogpost/:blogpostId" element={<BlogDetail />} />
             <Route exact path="/course/:courseId" element={<CourseDetail />} />
-            <Route
-              exact
-              path="/course/:courseId/certificate/:certificateId"
-              element={<CertificateDetail />}
-            />
-            <Route
-              path="/exam-availability/:certificationId"
-              element={<ExamAvailability />}
-            />
-            <Route
-              exact
-              path="/lecture/:lectureId"
-              element={<LectureDetail />}
-            />
+            <Route exact path="/course/:courseId/certificate/:certificateId" element={<CertificateDetail />} />
+            <Route path="/exam-availability/:certificationId" element={<ExamAvailability />} />
+            <Route exact path="/lecture/:lectureId" element={<LectureDetail />} />
             <Route exact path="/aboutus" element={<AboutUs />} />
             <Route exact path="/contactus" element={<ContactUs />} />
-            <Route
-              exact
-              path="/licence-aggrement"
-              element={<LicenceAggrement />}
-            />
+            <Route exact path="/licence-aggrement" element={<LicenceAggrement />} />
             <Route exact path="/help" element={<HelpPage />} />
             <Route exact path="/faq" element={<FAQ />} />
             <Route exact path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
-          {/* </Layout> */}
         </Router>
         <Footer />
       </HelmetProvider>
